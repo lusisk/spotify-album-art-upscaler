@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { upscaleImage, loadUpscaleModel } from "@/lib/upscaler";
 import { DEVICE_PRESETS } from "@/config/devices";
+import { generateQRCode, blobToDataUrl } from "@/utils/qr-code";
 import type { SpotifyAlbum, DevicePreset } from "@/types";
 
 interface ArtworkViewProps {
@@ -19,6 +20,8 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
   );
   const [customWidth, setCustomWidth] = useState(2560);
   const [customHeight, setCustomHeight] = useState(2560);
+  const [qrCode, setQrCode] = useState<string | null>(null);
+  const [showQrModal, setShowQrModal] = useState(false);
 
   useEffect(() => {
     loadUpscaleModel()
@@ -63,6 +66,17 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
 
       const upscaledBlobUrl = await upscaleImage(data.imageUrl, scale);
       setUpscaled(upscaledBlobUrl);
+
+      // Generate QR code for mobile download
+      try {
+        const response = await fetch(upscaledBlobUrl);
+        const blob = await response.blob();
+        const dataUrl = await blobToDataUrl(blob);
+        const qrDataUrl = await generateQRCode(dataUrl, { width: 400 });
+        setQrCode(qrDataUrl);
+      } catch (qrError) {
+        console.error("Failed to generate QR code:", qrError);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upscaling failed");
       console.error("Upscale error:", err);
@@ -215,10 +229,76 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
             </svg>
             Download Image
           </button>
+
+          <button
+            onClick={() => setShowQrModal(true)}
+            disabled={!qrCode || loading}
+            className="artwork-view__button artwork-view__button--secondary"
+          >
+            <svg
+              className="artwork-view__button-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+              <path d="M14 14h1v1h-1v-1z" />
+              <path d="M16 14h1v1h-1v-1z" />
+              <path d="M18 14h1v1h-1v-1z" />
+              <path d="M20 14h1v1h-1v-1z" />
+              <path d="M14 16h1v1h-1v-1z" />
+              <path d="M16 16h1v1h-1v-1z" />
+              <path d="M18 16h1v1h-1v-1z" />
+              <path d="M20 16h1v1h-1v-1z" />
+              <path d="M14 18h1v1h-1v-1z" />
+              <path d="M16 18h1v1h-1v-1z" />
+              <path d="M18 18h1v1h-1v-1z" />
+              <path d="M20 18h1v1h-1v-1z" />
+              <path d="M14 20h1v1h-1v-1z" />
+              <path d="M16 20h1v1h-1v-1z" />
+              <path d="M18 20h1v1h-1v-1z" />
+              <path d="M20 20h1v1h-1v-1z" />
+            </svg>
+            Scan QR Code
+          </button>
         </div>
 
         {error && <p className="artwork-view__error">{error}</p>}
       </div>
+
+      {showQrModal && qrCode && (
+        <div className="qr-modal" onClick={() => setShowQrModal(false)}>
+          <div
+            className="qr-modal__content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="qr-modal__close"
+              onClick={() => setShowQrModal(false)}
+              aria-label="Close"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+            <h3 className="qr-modal__title">Scan to Download on Your Phone</h3>
+            <img src={qrCode} alt="QR Code" className="qr-modal__image" />
+            <p className="qr-modal__instructions">
+              Open your phone's camera and point it at the QR code to download
+              the upscaled image.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
