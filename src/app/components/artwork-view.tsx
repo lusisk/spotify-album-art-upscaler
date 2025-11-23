@@ -306,8 +306,8 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
             <h3 className="qr-modal__title">Scan to Download on Your Phone</h3>
             <img src={qrCode} alt="QR Code" className="qr-modal__image" />
             <p className="qr-modal__instructions">
-              Open your phone's camera and point it at the QR code to download
-              the upscaled image.
+              Open your phone&apos;s camera and point it at the QR code to
+              download the upscaled image.
             </p>
           </div>
         </div>
