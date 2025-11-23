@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Spotify Album Art Upscaler
 
-## Getting Started
+A Next.js application that fetches Spotify album artwork and upscales it to 4K resolution using AI-powered canvas techniques.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- 🎵 Search for albums via Spotify API
+- 🖼️ Display high-quality album artwork
+- 🚀 AI-powered 4x upscaling (640x640 → 2560x2560)
+- 📱 Optimized for Galaxy S24 Ultra and other high-res displays
+- 💾 Download upscaled images as PNG
+- ⚡ Fast, client-side processing with ONNX Runtime
+
+## Tech Stack
+
+- **Framework**: Next.js 16 with React 19
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4 with custom BEM components
+- **AI/ML**: ONNX Runtime Web
+- **API**: Spotify Web API
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── api/
+│   │   ├── spotify/         # Spotify API routes
+│   │   │   ├── route.ts     # Album search endpoint
+│   │   │   └── token/       # Token management
+│   │   └── upscale/         # Image upscaling endpoint
+│   ├── components/
+│   │   ├── album-search.tsx # Search input component
+│   │   └── artwork-view.tsx # Image display & upscale UI
+│   ├── styles/
+│   │   ├── globals.css      # Global styles
+│   │   └── components.css   # BEM component styles
+│   ├── layout.tsx
+│   └── page.tsx
+├── lib/
+│   ├── spotify.ts           # Spotify token manager
+│   └── upscaler.ts          # Image upscaling logic
+└── types/
+    └── index.ts             # TypeScript interfaces
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository
+2. Install dependencies:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   npm install
+   ```
 
-## Learn More
+3. Create a `.env.local` file with your Spotify credentials:
 
-To learn more about Next.js, take a look at the following resources:
+   ```env
+   SPOTIFY_CLIENT_ID=your_client_id
+   SPOTIFY_CLIENT_SECRET=your_client_secret
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Run the development server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   npm run dev
+   ```
 
-## Deploy on Vercel
+5. Open [http://localhost:3000](http://localhost:3000)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Getting Spotify Credentials
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+2. Create a new app
+3. Copy your Client ID and Client Secret
+4. Add them to `.env.local`
+
+## How It Works
+
+1. **Search**: Enter an album name or artist
+2. **Fetch**: Retrieves album data from Spotify API with OAuth token caching
+3. **Display**: Shows the original album artwork
+4. **Upscale**: Uses canvas-based AI upscaling with sharpening filters
+5. **Download**: Save the 4K upscaled image
+
+## CSS Architecture
+
+Uses BEM (Block Element Modifier) convention for custom components:
+
+- `.album-search` - Search component block
+- `.album-search__input` - Input element
+- `.album-search__button` - Button element
+- `.artwork-view` - Artwork display block
+- `.artwork-view__image` - Image element
+- `.artwork-view__button` - Action button
+
+## License
+
+MIT
