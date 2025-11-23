@@ -7,7 +7,9 @@ let worker: Worker | null = null;
 
 function getWorker(): Worker {
   if (!worker) {
-    worker = new Worker("/upscale-worker.js");
+    worker = new Worker(
+      new URL("../workers/upscale.worker.ts", import.meta.url)
+    );
   }
   return worker;
 }

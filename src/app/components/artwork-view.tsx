@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { upscaleImage, loadUpscaleModel } from "@/lib/upscaler";
 import { DEVICE_PRESETS } from "@/config/devices";
-import { generateQRCode, blobToDataUrl } from "@/utils/qr-code";
+import { generateQRCode } from "@/utils/qr-code";
+import { storeSharedImage, cleanupExpiredShares } from "@/utils/indexeddb";
 import type { SpotifyAlbum, DevicePreset } from "@/types";
 
 interface ArtworkViewProps {
@@ -67,15 +68,27 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
       const upscaledBlobUrl = await upscaleImage(data.imageUrl, scale);
       setUpscaled(upscaledBlobUrl);
 
-      // Generate QR code for mobile download
       try {
         const response = await fetch(upscaledBlobUrl);
         const blob = await response.blob();
-        const dataUrl = await blobToDataUrl(blob);
-        const qrDataUrl = await generateQRCode(dataUrl, { width: 400 });
+
+        const shareId = `${Date.now()}-${Math.random()
+          .toString(36)
+          .substring(7)}`;
+
+        await storeSharedImage(shareId, blob, data.name);
+
+        const downloadUrl = `${window.location.origin}/download/${shareId}`;
+        const qrDataUrl = await generateQRCode(downloadUrl, {
+          width: 400,
+          errorCorrectionLevel: "M",
+        });
         setQrCode(qrDataUrl);
+
+        cleanupExpiredShares().catch(console.error);
       } catch (qrError) {
         console.error("Failed to generate QR code:", qrError);
+        setQrCode(null);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upscaling failed");

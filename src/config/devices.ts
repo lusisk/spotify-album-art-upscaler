@@ -1,6 +1,4 @@
-// Device/Resolution Presets
 export const DEVICE_PRESETS = Object.freeze([
-  // Latest iPhones
   Object.freeze({
     id: "iphone-16-pro-max",
     name: "iPhone 16 Pro Max",
@@ -50,7 +48,6 @@ export const DEVICE_PRESETS = Object.freeze([
     height: 2556,
   }),
 
-  // Samsung Galaxy S25 & S24 Series
   Object.freeze({
     id: "samsung-s25-ultra",
     name: "Samsung Galaxy S25 Ultra",
@@ -88,7 +85,6 @@ export const DEVICE_PRESETS = Object.freeze([
     height: 2340,
   }),
 
-  // Google Pixel
   Object.freeze({
     id: "pixel-9-pro-xl",
     name: "Google Pixel 9 Pro XL",
@@ -114,7 +110,6 @@ export const DEVICE_PRESETS = Object.freeze([
     height: 2992,
   }),
 
-  // iPads
   Object.freeze({
     id: "ipad-pro-13",
     name: 'iPad Pro 13"',
@@ -128,7 +123,6 @@ export const DEVICE_PRESETS = Object.freeze([
     height: 2388,
   }),
 
-  // Desktop
   Object.freeze({
     id: "desktop-4k",
     name: "Desktop 4K",
@@ -148,7 +142,6 @@ export const DEVICE_PRESETS = Object.freeze([
     height: 1080,
   }),
 
-  // Custom
   Object.freeze({
     id: "custom",
     name: "Custom Resolution",
