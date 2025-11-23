@@ -613,3 +613,220 @@
   text-align: center;
   margin: 0;
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .page {
+    padding: 0 0.75rem;
+    gap: 1rem;
+  }
+
+  /* Search Bar */
+  .album-search {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .album-search__button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Artwork Metadata */
+  .artwork-view__metadata {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .artwork-view__metadata-content {
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .artwork-view__song-name {
+    font-size: 1rem;
+  }
+
+  .artwork-view__album-name {
+    font-size: 0.875rem;
+  }
+
+  .artwork-view__artist-name {
+    font-size: 0.8125rem;
+  }
+
+  .artwork-view__badge {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Button Group */
+  .artwork-view__button-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .artwork-view__button {
+    width: 100%;
+    justify-content: center;
+    padding: 0.875rem 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .artwork-view__button-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  /* Custom Inputs */
+  .artwork-view__custom-inputs {
+    width: 100%;
+  }
+
+  .artwork-view__input {
+    flex: 1;
+    width: auto;
+  }
+
+  /* Logo Grid */
+  .cover-up-logo__grid {
+    width: 280px;
+    height: 280px;
+    gap: 0.5rem;
+  }
+
+  .cover-up-logo__title {
+    font-size: 2.25rem;
+  }
+
+  .cover-up-logo__subtitle {
+    font-size: 0.75rem;
+  }
+
+  /* Compact Logo */
+  .cover-up-logo--compact {
+    top: 0.75rem;
+    right: 0.75rem;
+    left: 0.75rem;
+    width: auto;
+  }
+
+  .cover-up-logo--compact .cover-up-logo__title {
+    font-size: 1rem;
+  }
+
+  .cover-up-logo--compact .cover-up-logo__subtitle {
+    font-size: 0.625rem;
+  }
+
+  .cover-up-logo__divider {
+    font-size: 1rem;
+  }
+
+  /* QR Modal */
+  .qr-modal {
+    padding: 0.75rem;
+  }
+
+  .qr-modal__content {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+
+  .qr-modal__title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .qr-modal__image {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .qr-modal__close {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra Small Screens */
+  .page {
+    padding: 0 0.5rem;
+  }
+
+  /* Logo Grid - Smaller */
+  .cover-up-logo__grid {
+    width: 240px;
+    height: 240px;
+    gap: 0.375rem;
+  }
+
+  .cover-up-logo__title {
+    font-size: 2rem;
+  }
+
+  .cover-up-logo__subtitle {
+    font-size: 0.6875rem;
+  }
+
+  /* Compact Logo - Even Smaller */
+  .cover-up-logo--compact .cover-up-logo__title {
+    font-size: 0.875rem;
+  }
+
+  .cover-up-logo--compact .cover-up-logo__subtitle {
+    display: none;
+  }
+
+  .cover-up-logo__divider {
+    display: none;
+  }
+
+  /* Buttons */
+  .artwork-view__button {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  /* Custom Resolution Inputs */
+  .artwork-view__input {
+    font-size: 0.875rem;
+    padding: 0.5rem;
+  }
+
+  .artwork-view__separator {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 360px) {
+  /* Very Small Screens */
+  .cover-up-logo__grid {
+    width: 200px;
+    height: 200px;
+    gap: 0.25rem;
+  }
+
+  .cover-up-logo__tile {
+    border-radius: 0.25rem;
+  }
+
+  .cover-up-logo__title {
+    font-size: 1.75rem;
+  }
+
+  .cover-up-logo--compact .cover-up-logo__title {
+    font-size: 0.75rem;
+  }
+
+  .qr-modal__content {
+    padding: 1rem;
+  }
+
+  .qr-modal__title {
+    font-size: 1.125rem;
+  }
+}
