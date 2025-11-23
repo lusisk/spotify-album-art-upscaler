@@ -83,17 +83,6 @@ src/
 4. **Upscale**: Uses canvas-based AI upscaling with sharpening filters
 5. **Download**: Save the 4K upscaled image
 
-## CSS Architecture
-
-Uses BEM (Block Element Modifier) convention for custom components:
-
-- `.album-search` - Search component block
-- `.album-search__input` - Input element
-- `.album-search__button` - Button element
-- `.artwork-view` - Artwork display block
-- `.artwork-view__image` - Image element
-- `.artwork-view__button` - Action button
-
 ## License
 
 MIT
