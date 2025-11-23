@@ -9,19 +9,22 @@ A Next.js application that fetches Spotify album artwork and upscales it for a s
 - 🎨 **Animated Brand Identity**: Dynamic mosaic logo featuring 30 iconic album covers with smooth cycling animations
 - 🎵 **Smart Album Search**: Search for albums via Spotify API with intelligent caching
 - 🖼️ **High-Quality Artwork**: Display original album artwork at maximum resolution
-- 🚀 **AI-Powered Upscaling**: 4x upscaling (640x640 → 2560x2560) using ONNX Runtime
-- 📱 **Device Presets**: Optimized for iPhone, Samsung Galaxy, Pixel, iPad, and Desktop displays
+- 🚀 **AI-Powered Upscaling**: Dynamic scaling (up to 5x) using Web Worker-based canvas upscaling with sharpening filters
+- 📱 **Device Presets**: Optimized for iPhone 16 series, Samsung Galaxy S25/S24, Pixel 9, iPad, and Desktop displays
 - 💾 **Instant Downloads**: Save upscaled images as PNG files
-- ⚡ **Fast Performance**: Client-side processing with localStorage caching for instant subsequent loads
+- 📲 **QR Code Sharing**: Generate QR codes for instant mobile downloads via local network
+- ⚡ **Fast Performance**: Client-side processing with IndexedDB storage for large images
 - 🎭 **Smooth Transitions**: Logo transitions to compact header mode when viewing album art
 
 ## Tech Stack
 
 - **Framework**: Next.js 15 with React 19
 - **Language**: TypeScript
-- **Styling**: Tailwind
-- **AI/ML**: ONNX Runtime Web for upscaling
+- **Image Processing**: Web Workers with OffscreenCanvas for high-performance upscaling
+- **Storage**: IndexedDB for large image blobs, localStorage for app state caching
+- **QR Codes**: qrcode library for generating shareable download links
 - **API**: Spotify Web API with OAuth token management
+- **HTTP Client**: Axios for API requests
 
 ## Project Structure
 
@@ -37,8 +40,11 @@ src/
 │   │       └── route.ts          # Image upscaling endpoint
 │   ├── components/
 │   │   ├── album-search.tsx      # Search input component
-│   │   ├── artwork-view.tsx      # Image display & upscale UI
+│   │   ├── artwork-view.tsx      # Image display, upscale UI & QR generation
 │   │   └── cover-up-logo.tsx     # Animated logo with album art mosaic
+│   ├── download/
+│   │   └── [id]/
+│   │       └── page.tsx          # QR code download handler
 │   ├── styles/
 │   │   ├── globals.css           # Global styles
 │   │   └── components.css        # BEM component styles & animations
@@ -46,13 +52,17 @@ src/
 │   └── page.tsx                  # Main page layout
 ├── config/
 │   ├── constants.ts              # API routes and configuration
-│   └── devices.ts                # Device resolution presets
+│   └── devices.ts                # Device resolution presets (iPhone, Samsung, Pixel, etc.)
 ├── lib/
-│   └── upscaler.ts               # Image upscaling logic with ONNX
+│   └── upscaler.ts               # Web Worker manager for image upscaling
 ├── services/
 │   └── spotify.ts                # SpotifyTokenManager service
 ├── utils/
-│   └── api-response.ts           # API response helper utility
+│   ├── api-response.ts           # API response helper utility
+│   ├── indexeddb.ts              # IndexedDB storage for large image blobs
+│   └── qr-code.ts                # QR code generation utilities
+├── workers/
+│   └── upscale.worker.ts         # Web Worker for canvas-based upscaling
 └── types/
     └── index.ts                  # TypeScript interfaces
 ```
@@ -101,14 +111,28 @@ src/
 1. **Search**: Enter an album name or artist in the search bar
 2. **Select**: Choose from search results to load the album artwork
 3. **Transition**: Logo smoothly transitions to a compact header in the top-right corner
-4. **Customize**: Select a device preset (iPhone, Samsung, Pixel, iPad, Desktop) or enter custom dimensions
-5. **AI Upscale**: Click "AI Upscale" to process the image using ONNX-powered upscaling (640x640 → 2560x2560)
-6. **Download**: Save your enhanced 4K album artwork as a PNG file
+4. **Customize**: Select a device preset (iPhone 16, Samsung S25, Pixel 9, iPad, Desktop) or enter custom dimensions
+5. **AI Upscale**: Click "AI Upscale" to process the image using Web Worker-based upscaling with sharpening filters
+6. **Download Options**:
+   - **Direct Download**: Save the upscaled image as PNG to your computer
+   - **QR Code Download**: Generate a QR code to download on your mobile device via local network
+
+### QR Code Mobile Download
+
+1. **Generate**: After upscaling, click "Scan QR Code" to open the QR modal
+2. **Store**: Image is stored in IndexedDB (supports large files up to 50MB+)
+3. **Scan**: Use your phone camera to scan the QR code
+4. **Download**: Phone opens download page on local network and automatically downloads the image
+5. **Auto-Expire**: QR codes and stored images expire after 1 hour for privacy
 
 ### Technical Details
 
+- **Web Worker Processing**: Image upscaling runs in a separate thread using OffscreenCanvas for non-blocking performance
+- **Sharpening Filter**: Applies convolution kernel for enhanced detail after upscaling
+- **Dynamic Scaling**: Automatically calculates scale factor based on target device (2x-5x)
+- **IndexedDB Storage**: Stores large upscaled images (no size limit issues like localStorage)
 - **OAuth Token Management**: Automatic Spotify API token refresh with client-side caching
-- **Batched API Requests**: Efficient fetching of album cover data in 20-item batches
+- **Batched API Requests**: Efficient fetching of album cover data in 20-item batches for logo animation
 - **SSR-Safe Rendering**: Hydration-safe design with shimmer loading states
 - **Progressive Enhancement**: Graceful fallbacks for loading states and missing images
 
