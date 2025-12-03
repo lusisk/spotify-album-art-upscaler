@@ -12,8 +12,9 @@ A Next.js application that fetches Spotify album artwork and upscales it for a s
 - 🚀 **AI-Powered Upscaling**: Dynamic scaling (up to 5x) using Web Worker-based canvas upscaling with sharpening filters
 - 📱 **Device Presets**: Optimized for iPhone 16 series, Samsung Galaxy S25/S24, Pixel 9, iPad, and Desktop displays
 - 💾 **Instant Downloads**: Save upscaled images as PNG files
-- 📲 **QR Code Sharing**: Generate QR codes for instant mobile downloads via local network
-- ⚡ **Fast Performance**: Client-side processing with IndexedDB storage for large images
+- 📲 **QR Code Sharing**: Generate QR codes for instant mobile downloads
+- 📱 **Mobile Responsive**: Fully optimized mobile layout with adaptive interface
+- ⚡ **Fast Performance**: Client-side processing with Web Worker-based upscaling
 - 🎭 **Smooth Transitions**: Logo transitions to compact header mode when viewing album art
 
 ## Tech Stack
@@ -21,7 +22,7 @@ A Next.js application that fetches Spotify album artwork and upscales it for a s
 - **Framework**: Next.js 15 with React 19
 - **Language**: TypeScript
 - **Image Processing**: Web Workers with OffscreenCanvas for high-performance upscaling
-- **Storage**: IndexedDB for large image blobs, localStorage for app state caching
+- **Storage**: Vercel Blob Storage for image sharing, localStorage for album cover URL caching
 - **QR Codes**: qrcode library for generating shareable download links
 - **API**: Spotify Web API with OAuth token management
 - **HTTP Client**: Axios for API requests
@@ -32,6 +33,8 @@ A Next.js application that fetches Spotify album artwork and upscales it for a s
 src/
 ├── app/
 │   ├── api/
+│   │   ├── share/
+│   │   │   └── route.ts          # Image sharing endpoint for QR codes
 │   │   ├── spotify/
 │   │   │   ├── route.ts          # Album search endpoint
 │   │   │   └── token/
@@ -59,7 +62,6 @@ src/
 │   └── spotify.ts                # SpotifyTokenManager service
 ├── utils/
 │   ├── api-response.ts           # API response helper utility
-│   ├── indexeddb.ts              # IndexedDB storage for large image blobs
 │   └── qr-code.ts                # QR code generation utilities
 ├── workers/
 │   └── upscale.worker.ts         # Web Worker for canvas-based upscaling
@@ -120,17 +122,23 @@ src/
 ### QR Code Mobile Download
 
 1. **Generate**: After upscaling, click "Scan QR Code" to open the QR modal
-2. **Store**: Image is stored in IndexedDB (supports large files up to 50MB+)
-3. **Scan**: Use your phone camera to scan the QR code
-4. **Download**: Phone opens download page on local network and automatically downloads the image
-5. **Auto-Expire**: QR codes and stored images expire after 1 hour for privacy
+2. **Upload**: Image is uploaded to Vercel Blob Storage and a public URL is generated
+3. **QR Code**: QR code is created pointing directly to the blob storage URL
+4. **Scan**: Use your phone camera to scan the QR code
+5. **Download**: Phone opens the blob URL directly for immediate download
+
+### Mobile Experience
+
+- **Responsive Layout**: Full-width compact header on mobile devices
+- **Adaptive Interface**: Horizontal button grid layout optimized for mobile screens
+- **Touch-Friendly**: Optimized spacing and tap targets for mobile interactions
 
 ### Technical Details
 
 - **Web Worker Processing**: Image upscaling runs in a separate thread using OffscreenCanvas for non-blocking performance
 - **Sharpening Filter**: Applies convolution kernel for enhanced detail after upscaling
 - **Dynamic Scaling**: Automatically calculates scale factor based on target device (2x-5x)
-- **IndexedDB Storage**: Stores large upscaled images (no size limit issues like localStorage)
+- **Vercel Blob Storage**: Upscaled images uploaded to cloud storage for cross-device QR code sharing
 - **OAuth Token Management**: Automatic Spotify API token refresh with client-side caching
 - **Batched API Requests**: Efficient fetching of album cover data in 20-item batches for logo animation
 - **SSR-Safe Rendering**: Hydration-safe design with shimmer loading states
