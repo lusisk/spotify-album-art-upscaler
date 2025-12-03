@@ -12,11 +12,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Convert base64 data URL to Buffer
     const base64Data = imageData.split(",")[1];
     const buffer = Buffer.from(base64Data, "base64");
 
-    // Upload to Vercel Blob with 1 hour expiration
     const blob = await put(`${shareId}.png`, buffer, {
       access: "public",
       addRandomSuffix: false,

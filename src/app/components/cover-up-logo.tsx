@@ -55,7 +55,7 @@ function generateDesign() {
   for (let i = 0; i < gridSize * gridSize; i++) {
     tiles.push({
       id: i,
-      imageUrl: "", // Will be fetched
+      imageUrl: "",
       delay: baseDelays[i],
     });
   }

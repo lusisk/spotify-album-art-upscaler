@@ -60,7 +60,6 @@ export async function getSharedImage(
     request.onsuccess = () => {
       const data = request.result as ShareData | undefined;
 
-      // Check if data exists and is not expired (1 hour)
       if (data) {
         const oneHour = 60 * 60 * 1000;
         if (Date.now() - data.timestamp > oneHour) {
