@@ -134,8 +134,9 @@
 }
 
 .artwork-view__badge-icon {
-  width: 1rem;
-  height: 1rem;
+  font-size: 1rem;
+  vertical-align: middle;
+  margin-right: 0.375rem;
 }
 
 .artwork-view__image-container {
@@ -304,8 +305,9 @@
 }
 
 .artwork-view__button-icon {
-  width: 1.25rem;
-  height: 1.25rem;
+  font-size: 1.25rem;
+  vertical-align: middle;
+  margin-right: 0.375rem;
   flex-shrink: 0;
 }
 
@@ -574,9 +576,8 @@
   padding: 0;
 }
 
-.qr-modal__close svg {
-  width: 1.25rem;
-  height: 1.25rem;
+.qr-modal__close i {
+  font-size: 1.25rem;
   color: #a1a1aa;
 }
 
@@ -585,7 +586,7 @@
   transform: scale(1.05);
 }
 
-.qr-modal__close:hover svg {
+.qr-modal__close:hover i {
   color: #fff;
 }
 

@@ -130,15 +130,7 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
         </div>
         {modelLoaded && (
           <div className="artwork-view__badge">
-            <svg
-              className="artwork-view__badge-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
+            <i className="bi bi-check-circle-fill artwork-view__badge-icon"></i>
             <span>AI Upscale Ready</span>
           </div>
         )}
@@ -217,17 +209,7 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
             disabled={loading || !modelLoaded}
             className="artwork-view__button artwork-view__button--primary"
           >
-            <svg
-              className="artwork-view__button-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7" />
-              <polyline points="16 8 12 4 8 8" />
-              <line x1="12" y1="4" x2="12" y2="16" />
-            </svg>
+            <i className="bi bi-arrow-up-circle artwork-view__button-icon"></i>
             {loading
               ? "Processing..."
               : !modelLoaded
@@ -249,17 +231,7 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
             disabled={!upscaled || loading}
             className="artwork-view__button artwork-view__button--success"
           >
-            <svg
-              className="artwork-view__button-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
+            <i className="bi bi-download artwork-view__button-icon"></i>
             Download Image
           </button>
 
@@ -268,33 +240,7 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
             disabled={!qrCode || loading}
             className="artwork-view__button artwork-view__button--secondary"
           >
-            <svg
-              className="artwork-view__button-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <rect x="3" y="3" width="7" height="7" />
-              <rect x="14" y="3" width="7" height="7" />
-              <rect x="3" y="14" width="7" height="7" />
-              <path d="M14 14h1v1h-1v-1z" />
-              <path d="M16 14h1v1h-1v-1z" />
-              <path d="M18 14h1v1h-1v-1z" />
-              <path d="M20 14h1v1h-1v-1z" />
-              <path d="M14 16h1v1h-1v-1z" />
-              <path d="M16 16h1v1h-1v-1z" />
-              <path d="M18 16h1v1h-1v-1z" />
-              <path d="M20 16h1v1h-1v-1z" />
-              <path d="M14 18h1v1h-1v-1z" />
-              <path d="M16 18h1v1h-1v-1z" />
-              <path d="M18 18h1v1h-1v-1z" />
-              <path d="M20 18h1v1h-1v-1z" />
-              <path d="M14 20h1v1h-1v-1z" />
-              <path d="M16 20h1v1h-1v-1z" />
-              <path d="M18 20h1v1h-1v-1z" />
-              <path d="M20 20h1v1h-1v-1z" />
-            </svg>
+            <i className="bi bi-qr-code artwork-view__button-icon"></i>
             Scan QR Code
           </button>
         </div>
@@ -313,15 +259,7 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
               onClick={() => setShowQrModal(false)}
               aria-label="Close"
             >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+              <i className="bi bi-x-lg"></i>
             </button>
             <h3 className="qr-modal__title">Scan to Download on Your Phone</h3>
             <img src={qrCode} alt="QR Code" className="qr-modal__image" />
