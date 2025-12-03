@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { upscaleImage, loadUpscaleModel } from "@/lib/upscaler";
 import { DEVICE_PRESETS } from "@/config/devices";
-import { generateQRCode, blobToDataUrl } from "@/utils/qr-code";
+import { generateQRCode } from "@/utils/qr-code";
 import type { SpotifyAlbum, DevicePreset } from "@/types";
 
 interface ArtworkViewProps {
