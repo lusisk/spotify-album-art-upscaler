@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getSharedImage } from "@/utils/indexeddb";
 
 export default function DownloadPage() {
   const params = useParams();
@@ -14,23 +13,30 @@ export default function DownloadPage() {
   useEffect(() => {
     const downloadImage = async () => {
       try {
-        const shareData = await getSharedImage(shareId);
+        // Fetch image from API
+        const response = await fetch(`/api/share?id=${shareId}`);
 
-        if (shareData) {
-          setStatus("downloading");
-
-          const url = URL.createObjectURL(shareData.blob);
-
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `${shareData.albumName}-upscaled.png`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        } else {
+        if (!response.ok) {
           setStatus("notfound");
+          return;
         }
+
+        const { imageData, albumName } = await response.json();
+
+        setStatus("downloading");
+
+        // Convert data URL to blob and download
+        const fetchResponse = await fetch(imageData);
+        const blob = await fetchResponse.blob();
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${albumName}-upscaled.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       } catch (error) {
         console.error("Download error:", error);
         setStatus("notfound");
