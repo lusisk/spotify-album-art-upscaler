@@ -664,21 +664,24 @@
 
   /* Button Group */
   .artwork-view__button-group {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     width: 100%;
     gap: 0.5rem;
   }
 
   .artwork-view__button {
-    width: 100%;
+    flex: 1;
+    min-width: calc(50% - 0.25rem);
     justify-content: center;
-    padding: 0.875rem 1rem;
-    font-size: 0.9375rem;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
   }
 
   .artwork-view__button-icon {
-    width: 1.125rem;
-    height: 1.125rem;
+    font-size: 1rem;
+    vertical-align: middle;
+    margin-right: 0rem;
   }
 
   /* Custom Inputs */
@@ -708,14 +711,14 @@
 
   /* Compact Logo */
   .cover-up-logo--compact {
-    top: 0.75rem;
-    right: 0.75rem;
-    left: 0.75rem;
-    width: auto;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
     background-color: rgba(10, 10, 10, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.75rem;
-    padding: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    padding: 0.75rem 1rem;
     backdrop-filter: blur(10px);
   }
 
