@@ -1,50 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
+import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 
 export async function POST(request: NextRequest) {
+  const body = (await request.json()) as HandleUploadBody;
+
   try {
-    const { searchParams } = new URL(request.url);
-    const filename = searchParams.get("filename");
-
-    if (!filename) {
-      return NextResponse.json(
-        { error: "Missing filename parameter" },
-        { status: 400 }
-      );
-    }
-
-    const formData = await request.formData();
-    const file = formData.get("file") as File;
-
-    if (!file) {
-      return NextResponse.json(
-        { error: "Missing file in request" },
-        { status: 400 }
-      );
-    }
-
-    console.log(
-      `Uploading ${(file.size / 1024 / 1024).toFixed(2)}MB to Blob Storage`
-    );
-
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    const blob = await put(filename, buffer, {
-      access: "public",
-      addRandomSuffix: false,
+    const jsonResponse = await handleUpload({
+      body,
+      request,
+      onBeforeGenerateToken: async () => {
+        return {
+          allowedContentTypes: ["image/png", "image/jpeg"],
+          maximumSizeInBytes: 50 * 1024 * 1024, // 50MB
+        };
+      },
+      onUploadCompleted: async ({ blob }) => {
+        console.log("Upload completed:", blob.url);
+      },
     });
 
-    console.log(`Successfully uploaded to: ${blob.url}`);
-
-    return NextResponse.json({
-      success: true,
-      blobUrl: blob.url,
-    });
+    return NextResponse.json(jsonResponse);
   } catch (error) {
-    console.error("Error storing shared image:", error);
+    console.error("Error handling upload:", error);
     return NextResponse.json(
-      { error: "Failed to store image" },
+      { error: "Failed to handle upload" },
       { status: 500 }
     );
   }

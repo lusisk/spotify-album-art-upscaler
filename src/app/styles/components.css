@@ -285,14 +285,12 @@
 .artwork-view__button-group {
   display: flex;
   gap: 0.75rem;
-  flex-wrap: wrap;
   justify-content: center;
 }
 
 .artwork-view__button {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
   padding: 0.875rem 1.75rem;
   border-radius: 0.75rem;
   font-weight: 700;
@@ -305,7 +303,6 @@
 
 .artwork-view__button-icon {
   font-size: 1.25rem;
-  vertical-align: middle;
   margin-right: 0.375rem;
   flex-shrink: 0;
 }
@@ -678,8 +675,7 @@
 
   .artwork-view__button-icon {
     font-size: 1rem;
-    vertical-align: middle;
-    margin-right: 0rem;
+    margin-right: 0.25rem;
   }
 
   .artwork-view__custom-inputs {

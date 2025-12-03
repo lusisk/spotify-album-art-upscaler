@@ -77,26 +77,41 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
           .toString(36)
           .substring(7)}`;
 
-        const formData = new FormData();
-        formData.append("file", blob, `${shareId}.png`);
+        const file = new File([blob], `${shareId}.png`, { type: "image/png" });
 
-        const uploadResponse = await fetch(
-          `/api/share?filename=${shareId}.png`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
+        const uploadResponse = await fetch(`/api/share`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "blob.generate-client-token",
+            payload: {
+              pathname: `${shareId}.png`,
+              callbackUrl: `${window.location.origin}/api/share`,
+            },
+          }),
+        });
 
         if (!uploadResponse.ok) {
-          const errorData = await uploadResponse.json();
-          throw new Error(
-            errorData.error || "Failed to store image for sharing"
-          );
+          throw new Error("Failed to get upload token");
         }
 
-        const { blobUrl: storageBlobUrl } = await uploadResponse.json();
-        const qrDataUrl = await generateQRCode(storageBlobUrl, {
+        const { url, token } = await uploadResponse.json();
+
+        const blobUploadResponse = await fetch(url, {
+          method: "PUT",
+          headers: {
+            "x-vercel-blob-token": token,
+          },
+          body: file,
+        });
+
+        if (!blobUploadResponse.ok) {
+          throw new Error("Failed to upload to blob storage");
+        }
+
+        const { url: blobUrl } = await blobUploadResponse.json();
+
+        const qrDataUrl = await generateQRCode(blobUrl, {
           width: 400,
           errorCorrectionLevel: "M",
         });
