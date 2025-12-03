@@ -72,6 +72,8 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
         const blob = await response.blob();
         const dataUrl = await blobToDataUrl(blob);
 
+        console.log(`Image size: ${(blob.size / 1024 / 1024).toFixed(2)}MB`);
+
         const shareId = `${Date.now()}-${Math.random()
           .toString(36)
           .substring(7)}`;
@@ -87,17 +89,25 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
         });
 
         if (!storeResponse.ok) {
-          throw new Error("Failed to store image for sharing");
+          const errorData = await storeResponse.json();
+          throw new Error(
+            errorData.error || "Failed to store image for sharing"
+          );
         }
 
-        const downloadUrl = `${window.location.origin}/download/${shareId}`;
-        const qrDataUrl = await generateQRCode(downloadUrl, {
+        const { blobUrl } = await storeResponse.json();
+        const qrDataUrl = await generateQRCode(blobUrl, {
           width: 400,
           errorCorrectionLevel: "M",
         });
         setQrCode(qrDataUrl);
       } catch (qrError) {
         console.error("Failed to generate QR code:", qrError);
+        if (qrError instanceof Error && qrError.message.includes("too large")) {
+          setError(
+            "Image too large for QR sharing. Try a smaller device resolution."
+          );
+        }
         setQrCode(null);
       }
     } catch (err) {
