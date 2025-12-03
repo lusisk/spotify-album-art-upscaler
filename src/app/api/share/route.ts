@@ -3,26 +3,39 @@ import { put } from "@vercel/blob";
 
 export async function POST(request: NextRequest) {
   try {
-    const { shareId, imageData, albumName } = await request.json();
+    const { searchParams } = new URL(request.url);
+    const filename = searchParams.get("filename");
 
-    if (!shareId || !imageData || !albumName) {
+    if (!filename) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Missing filename parameter" },
         { status: 400 }
       );
     }
 
-    const base64Data = imageData.split(",")[1];
-    const buffer = Buffer.from(base64Data, "base64");
+    const formData = await request.formData();
+    const file = formData.get("file") as File;
 
-    const blob = await put(`${shareId}.png`, buffer, {
+    if (!file) {
+      return NextResponse.json(
+        { error: "Missing file in request" },
+        { status: 400 }
+      );
+    }
+
+    console.log(
+      `Uploading ${(file.size / 1024 / 1024).toFixed(2)}MB to Blob Storage`
+    );
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const blob = await put(filename, buffer, {
       access: "public",
       addRandomSuffix: false,
     });
 
-    console.log(
-      `Uploaded ${(buffer.length / 1024 / 1024).toFixed(2)}MB to Blob Storage`
-    );
+    console.log(`Successfully uploaded to: ${blob.url}`);
 
     return NextResponse.json({
       success: true,

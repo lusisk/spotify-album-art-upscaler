@@ -70,7 +70,6 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
       try {
         const response = await fetch(upscaledBlobUrl);
         const blob = await response.blob();
-        const dataUrl = await blobToDataUrl(blob);
 
         console.log(`Image size: ${(blob.size / 1024 / 1024).toFixed(2)}MB`);
 
@@ -78,25 +77,26 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
           .toString(36)
           .substring(7)}`;
 
-        const storeResponse = await fetch("/api/share", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            shareId,
-            imageData: dataUrl,
-            albumName: data.name,
-          }),
-        });
+        const formData = new FormData();
+        formData.append("file", blob, `${shareId}.png`);
 
-        if (!storeResponse.ok) {
-          const errorData = await storeResponse.json();
+        const uploadResponse = await fetch(
+          `/api/share?filename=${shareId}.png`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!uploadResponse.ok) {
+          const errorData = await uploadResponse.json();
           throw new Error(
             errorData.error || "Failed to store image for sharing"
           );
         }
 
-        const { blobUrl } = await storeResponse.json();
-        const qrDataUrl = await generateQRCode(blobUrl, {
+        const { blobUrl: storageBlobUrl } = await uploadResponse.json();
+        const qrDataUrl = await generateQRCode(storageBlobUrl, {
           width: 400,
           errorCorrectionLevel: "M",
         });
