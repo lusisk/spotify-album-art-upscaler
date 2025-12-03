@@ -712,6 +712,11 @@
     right: 0.75rem;
     left: 0.75rem;
     width: auto;
+    background-color: rgba(10, 10, 10, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    backdrop-filter: blur(10px);
   }
 
   .cover-up-logo--compact .cover-up-logo__title {
