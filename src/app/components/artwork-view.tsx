@@ -79,39 +79,16 @@ export default function ArtworkView({ data }: ArtworkViewProps) {
 
         const file = new File([blob], `${shareId}.png`, { type: "image/png" });
 
-        const uploadResponse = await fetch(`/api/share`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: "blob.generate-client-token",
-            payload: {
-              pathname: `${shareId}.png`,
-              callbackUrl: `${window.location.origin}/api/share`,
-            },
-          }),
+        const { upload } = await import("@vercel/blob/client");
+
+        const newBlob = await upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/share",
         });
 
-        if (!uploadResponse.ok) {
-          throw new Error("Failed to get upload token");
-        }
+        console.log("Upload successful:", newBlob.url);
 
-        const { url, token } = await uploadResponse.json();
-
-        const blobUploadResponse = await fetch(url, {
-          method: "PUT",
-          headers: {
-            "x-vercel-blob-token": token,
-          },
-          body: file,
-        });
-
-        if (!blobUploadResponse.ok) {
-          throw new Error("Failed to upload to blob storage");
-        }
-
-        const { url: blobUrl } = await blobUploadResponse.json();
-
-        const qrDataUrl = await generateQRCode(blobUrl, {
+        const qrDataUrl = await generateQRCode(newBlob.url, {
           width: 400,
           errorCorrectionLevel: "M",
         });
